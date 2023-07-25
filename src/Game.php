@@ -29,6 +29,9 @@
             if ($currentPlayer->getIsPlayed()) {
                 
                 $result = $currentPlayer->move($nbCase);
+                if ($result == false) {
+                    return false;
+                }
                 $currentPlayer->setIsPlayed(false);
                 $this->currentPlayerIndex++;
 
@@ -52,6 +55,10 @@
 
         public function getGrid(): Array {
             return $this->grid;
+        }
+
+        public function getCurrentIndex(): int {
+            return $this->currentPlayerIndex;
         }
 
     }

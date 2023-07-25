@@ -25,6 +25,9 @@
         }
 
         public function move(int $nbcase) : bool {
+            if ($nbcase > 2) {
+                return false;
+            }
             switch($this->direction) {
                 case self::UP :
                     $this->y += $nbcase;

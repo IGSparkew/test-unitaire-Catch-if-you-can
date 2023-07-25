@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
+use function PHPUnit\Framework\assertNotEquals;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
@@ -38,6 +39,14 @@ use function PHPUnit\Framework\assertTrue;
             assertEquals(4, $game->getFirstPlayer()->getY());
             $game->moveCurrentPlayer(1);
             assertEquals(6, $game->getSecondPlayer()->getY());
+        }
+
+        public static function testPlayerMoveMoreThanTowCase() {
+            $game = new Game([2, 3], [5, 5]);
+            $result = $game->moveCurrentPlayer(4);
+            assertFalse($result);
+            assertNotEquals(7, $game->getFirstPlayer()->getY());
+            assertEquals(0, $game->getCurrentIndex());
         }
 
 
