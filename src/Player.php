@@ -25,7 +25,7 @@
         }
 
         public function move(int $nbcase) : bool {
-            if ($nbcase > 2) {
+            if ($nbcase > 2 || $nbcase <= 0) {
                 return false;
             }
             switch($this->direction) {

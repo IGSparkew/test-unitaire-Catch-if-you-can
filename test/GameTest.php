@@ -49,6 +49,18 @@ use function PHPUnit\Framework\assertTrue;
             assertEquals(0, $game->getCurrentIndex());
         }
 
+        public static function testPlayerMoveNegativeOrZeroCase() {
+            $game = new Game([2, 3], [5, 5]);
+            $result = $game->moveCurrentPlayer(0);
+            assertFalse($result);
+            assertEquals(0, $game->getCurrentIndex());
+            $result = $game->moveCurrentPlayer(-1);
+            assertFalse($result);
+            assertEquals(0, $game->getCurrentIndex());
+        }
+
+
+
 
 
     }
