@@ -1,1 +1,1 @@
-{"version":1,"defects":{"GameTest::testHadGame":5,"GameTest::testGameHadtowPlayers":8},"times":{"GameTest::testHadGame":0,"GameTest::testGameHadtowPlayers":0}}
+{"version":1,"defects":{"GameTest::testHadGame":5,"GameTest::testGameHadtowPlayers":8,"GameTest::testGameHadGrid":5},"times":{"GameTest::testHadGame":0,"GameTest::testGameHadtowPlayers":0,"GameTest::testGameHadGrid":0}}

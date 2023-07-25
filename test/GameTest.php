@@ -4,6 +4,7 @@ include "./src/Player.php";
 
 use PHPUnit\Framework\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
@@ -18,6 +19,14 @@ use function PHPUnit\Framework\assertTrue;
             $game = new Game(new Player(), new Player());
             assertNotNull($game->getFirstPlayer());
             assertNotNull($game->getSecondPlayer());
+        }
+
+        public static function testGameHadGrid() {
+            $game = new Game(new Player(), new Player());
+            assertEquals(10, count($game->getGrid()));
+            foreach($game->getGrid() as $row) {
+                assertEquals(10, count($row));
+            }
         }
 
 
