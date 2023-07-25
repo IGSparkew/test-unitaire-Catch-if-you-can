@@ -1,0 +1,17 @@
+{
+    "name": "alexr/test-unitaire-catch-if-you-can",
+    "autoload": {
+        "psr-4": {
+            "Alexr\\TestUnitaireCatchIfYouCan\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "IGSparkew",
+            "email": "40170910+IGSparkew@users.noreply.github.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^10.2"
+    }
+}
