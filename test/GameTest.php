@@ -59,6 +59,21 @@ use function PHPUnit\Framework\assertTrue;
             assertEquals(0, $game->getCurrentIndex());
         }
 
+        public static function testPlayerPivotRigh() { 
+            $game = new Game([2, 3], [5, 5]);
+            $result = $game->pivotCurrentPlayer(Game::RIGHT);
+            assertTrue($result);
+            assertEquals(Player::ORIENTATION[1],$game->getFirstPlayer()->getDirection());
+        }
+
+        public static function testPlayerPivotLeft() { 
+            $game = new Game([2, 3], [5, 5]);
+            $result = $game->pivotCurrentPlayer(Game::LEFT);
+            var_dump($game->getFirstPlayer()->getDirection());
+            assertEquals(Player::ORIENTATION[3],$game->getFirstPlayer()->getDirection());
+        }
+
+
 
 
 

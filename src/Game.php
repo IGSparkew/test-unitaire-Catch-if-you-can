@@ -3,6 +3,9 @@
 
     class Game {
 
+        const RIGHT = "right";
+        const LEFT = "left";
+
         private $grid;
         private Array $playerList;
         private int $currentPlayerIndex;
@@ -32,7 +35,29 @@
                 if ($result == false) {
                     return false;
                 }
-                $currentPlayer->setIsPlayed(false);
+                $this->changeCurrentPlayer();
+                return $result;
+            }
+            return false;
+        }
+
+        public function pivotCurrentPlayer(string $direction):bool {
+            $currentPlayer = $this->getCurrentPlayer();
+            if ($currentPlayer->getIsPlayed()) {
+                $result = $currentPlayer->pivot($direction);
+                if ($result == false) {
+                    return false;
+                }
+                $this->changeCurrentPlayer();
+                return $result;
+            }
+            return false;
+        }
+
+        private function changeCurrentPlayer() {
+            $currentPlayer = $this->getCurrentPlayer();
+
+            $currentPlayer->setIsPlayed(false);
                 $this->currentPlayerIndex++;
 
                 if ($this->currentPlayerIndex >= count($this->playerList)) {
@@ -40,9 +65,10 @@
                 }
                 $nextCurrentPlayer = $this->playerList[$this->currentPlayerIndex];
                 $nextCurrentPlayer->setIsPlayed(true);
-                return $result;
-            }
-            return false;
+        }
+
+        public function getCurrentPlayer() : Player {
+            return $this->playerList[$this->currentPlayerIndex];
         }
 
         public function getFirstPlayer(): Player {
