@@ -194,9 +194,16 @@ use function PHPUnit\Framework\assertTrue;
             assertEquals([1, 0], $game->getCurrentScore()->getDistanceBetweenPlayer());
         }
 
+        public function testPlayEasyGameWin() {
+            $game = new Game((new EasyGame([0,1], [0, 0])));
+            $result = $game->play([[Game::PIVOT, Game::LEFT], [Game::MOVE, 1]]);
+            assertEquals(Game::WIN_P2, $result);
+        }
 
-
-
-
+        public function testPlayHardGameWin() {
+            $game = new Game((new HardGame([0,1], [0, 0])));
+            $result = $game->play([[Game::MOVE, 5], [Game::MOVE, 1]]);
+            assertEquals(Game::WIN_P2, $result);
+        }
 
     }
