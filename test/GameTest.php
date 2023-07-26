@@ -206,4 +206,16 @@ use function PHPUnit\Framework\assertTrue;
             assertEquals(Game::WIN_P2, $result);
         }
 
+        public function testPlayEasyGameScore() {
+            $game = new Game((new EasyGame([0,1], [0, 0])));
+            $result = $game->play([[Game::PIVOT, Game::LEFT], [Game::PIVOT, Game::RIGHT]]);
+            assertNotNull($result);
+        }
+
+        public function testPlayHardGameScore() {
+            $game = new Game((new HardGame([0,1], [0, 0])));
+            $result = $game->play([[Game::MOVE, 5], [Game::MOVE, 2]]);
+            assertNotNull($result);
+        }
+
     }
