@@ -4,6 +4,7 @@
 include "./src/Game.php";
 include "./src/Player.php";
 include "./src/GameService.php";
+include "./src/Score.php";
 
 use PHPUnit\Framework\TestCase;
 
@@ -30,50 +31,62 @@ use function PHPUnit\Framework\assertTrue;
             $this->easyGame = new Game(new EasyGame($this->positionFirst, $this->positionSecond));
         }
     
-        public function testHadGame() {
+        public function testHadGameEasy() {
             assertTrue($this->easyGame instanceof Game);
-            assertTrue($this->hardGame instanceof Game);
-
+            assertTrue($this->easyGame->getGameService() instanceof EasyGame);
         }
 
-        public function testGameHadtowPlayers() {
+        public function testHadGameHard() {
+            assertTrue($this->hardGame instanceof Game);
+            assertTrue($this->hardGame->getGameService() instanceof HardGame);
+        }
+
+        public function testGameEasyHadtowPlayers() {
             assertNotNull($this->easyGame->getFirstPlayer());
             assertNotNull($this->easyGame->getSecondPlayer());
+        }
 
+        public function testGameHadHardtowPlayers() { 
             assertNotNull($this->hardGame->getFirstPlayer());
             assertNotNull($this->hardGame->getSecondPlayer());
         }
 
-        public function testGameHadGrid() {
+        public function testGameEasyHadGrid() {
             assertEquals(10, count($this->easyGame->getGrid()));
             foreach($this->easyGame->getGrid() as $row) {
                 assertEquals(10, count($row));
             }
+        }
 
+        public function testGameHardHadGrid() { 
             assertEquals(10, count($this->hardGame->getGrid()));
             foreach($this->hardGame->getGrid() as $row) {
                 assertEquals(10, count($row));
             }
         }
 
-        public function testPlayerPlayOneByOne() {
+        public function testPlayerPlayOneByOneGameEasy() {
             $this->easyGame->moveCurrentPlayer(1);
             assertEquals(4, $this->easyGame->getFirstPlayer()->getY());
             $this->easyGame->moveCurrentPlayer(1);
             assertEquals(6, $this->easyGame->getSecondPlayer()->getY());
+        }
 
+        public function testPlayerPlayOneByOneGameHard() { 
             $this->hardGame->moveCurrentPlayer(1);
             assertEquals(4, $this->hardGame->getFirstPlayer()->getY());
             $this->hardGame->moveCurrentPlayer(1);
             assertEquals(6, $this->hardGame->getSecondPlayer()->getY());
         }
 
-        public function testPlayerMoveMoreThanTowCase() {
+        public function testPlayerMoveMoreThanTowCaseGameEasy() {
             $result = $this->easyGame->moveCurrentPlayer(4);
             assertFalse($result);
             assertNotEquals(7, $this->easyGame->getFirstPlayer()->getY());
             assertEquals(0, $this->easyGame->getCurrentIndex());
+        }
 
+        public function testPlayerMoveMoreThanTowCaseGameHard() { 
             $result = $this->hardGame->moveCurrentPlayer(4);
             assertFalse($result);
             assertNotEquals(7, $this->hardGame->getFirstPlayer()->getY());
@@ -89,7 +102,9 @@ use function PHPUnit\Framework\assertTrue;
             $result = $this->easyGame->moveCurrentPlayer(-1);
             assertFalse($result);
             assertEquals(0, $this->easyGame->getCurrentIndex());
+        }
 
+        public function testPlayerMoveNegativeOrZeroCaseGameHard() {
             $result = $this->hardGame->moveCurrentPlayer(0);
             assertFalse($result);
             assertEquals(1, $this->hardGame->getCurrentIndex());
@@ -97,41 +112,86 @@ use function PHPUnit\Framework\assertTrue;
             $result = $this->hardGame->moveCurrentPlayer(-1);
             assertFalse($result);
             assertEquals(0, $this->hardGame->getCurrentIndex());
-        }
+         }
 
-        public function testPlayerPivotRigh() { 
+        public function testPlayerPivotRighGameEasy() { 
             $result = $this->easyGame->pivotCurrentPlayer(Game::RIGHT);
             assertTrue($result);
             assertEquals(Player::ORIENTATION[1],$this->easyGame->getFirstPlayer()->getDirection());
+        }
 
+        public function testPlayerPivotRighGameHard() { 
             $result = $this->hardGame->pivotCurrentPlayer(Game::RIGHT);
             assertTrue($result);
             assertEquals(Player::ORIENTATION[1], $this->hardGame->getFirstPlayer()->getDirection());
         }
 
-        public function testPlayerPivotLeft() { 
-            $result = $this->easyGame->pivotCurrentPlayer(Game::LEFT);
+        public function testPlayerPivotLeftGameEasy() { 
+            $this->easyGame->pivotCurrentPlayer(Game::LEFT);
             assertEquals(Player::ORIENTATION[3],$this->easyGame->getFirstPlayer()->getDirection());
+        }
 
-            $result = $this->hardGame->pivotCurrentPlayer(Game::LEFT);
+        public function testPlayerPivotLeftGameHard() { 
+            $this->hardGame->pivotCurrentPlayer(Game::LEFT);
             assertEquals(Player::ORIENTATION[3],$this->hardGame->getFirstPlayer()->getDirection());
         }
 
-        public function testPlayerIsOutGrid() {
+        public function testPlayerIsOutGridGameEasy() {
             $easyGame = new Game(new EasyGame([2, 10], [0, 5]));
-            $result = $easyGame->moveCurrentPlayer(1);
+            $easyGame->moveCurrentPlayer(1);
             assertNotEquals(11, $easyGame->getFirstPlayer()->getY());
             assertEquals(0, $easyGame->getCurrentIndex());
+        }
 
+        public function testPlayerIsOutGridGameHard() { 
             $hardGame = new Game(new HardGame([2, 10], [0, 5]));
-            $result = $hardGame->moveCurrentPlayer(1);
+            $hardGame->moveCurrentPlayer(1);
             assertNotEquals(11, $hardGame->getFirstPlayer()->getY());
             assertEquals(1, $hardGame->getCurrentIndex());
-            $result = $hardGame->pivotCurrentPlayer(Game::LEFT);
-            $result = $hardGame->moveCurrentPlayer(1);
+
+            $hardGame->pivotCurrentPlayer(Game::LEFT);
+            $hardGame->moveCurrentPlayer(1);
             assertEquals(1, $hardGame->getCurrentIndex());
-            $result = $hardGame->moveCurrentPlayer(1);
+            
+            $hardGame->moveCurrentPlayer(1);
             assertNotEquals(-1, $hardGame->getSecondPlayer()->getX());
+        }
+
+        public function testGameScore() {
+            $game = new Game(new EasyGame([0, 1], [1, 1]));
+            $game->pivotCurrentPlayer(Game::LEFT);
+            $game->pivotCurrentPlayer(Game::LEFT);
+            assertNotNull($game->getCurrentScore());
+        }
+
+        public function testGameScoreSeeColumn() {
+            $game = new Game(new EasyGame([0, 1], [1, 1]));
+            $game->pivotCurrentPlayer(Game::LEFT);
+            $game->pivotCurrentPlayer(Game::LEFT);
+            assertFalse($game->getCurrentScore()->firstPlayerSeeSecond());
+            assertTrue($game->getCurrentScore()->secondPlayerSeeFirst());
+        }
+
+        public function testGameScoreSeeRow() {
+            $game = new Game(new EasyGame([0, 4], [0, 1]));
+            $game->moveCurrentPlayer(1);
+            $game->moveCurrentPlayer(1);
+            assertFalse($game->getCurrentScore()->firstPlayerSeeSecond());
+            assertTrue($game->getCurrentScore()->secondPlayerSeeFirst());
+        }
+
+        public function testGameDistanceRow() {
+            $game = new Game(new EasyGame([0, 4], [0, 1]));
+            $game->moveCurrentPlayer(1);
+            $game->moveCurrentPlayer(1);
+            assertEquals([0, 3], $game->getCurrentScore()->getDistanceBetweenPlayer());
+        }
+
+        public function testGameScoreDistanceColumn() {
+            $game = new Game(new EasyGame([0, 1], [1, 1]));
+            $game->pivotCurrentPlayer(Game::LEFT);
+            $game->pivotCurrentPlayer(Game::LEFT);
+            assertEquals([1, 0], $game->getCurrentScore()->getDistanceBetweenPlayer());
         }
 
 

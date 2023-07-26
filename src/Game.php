@@ -6,9 +6,7 @@
         const RIGHT = "right";
         const LEFT = "left";
 
-        public function __construct(private DifficultyGame $difficultyGame = new EasyGame()) {
-           
-        }
+        public function __construct(private DifficultyGame $difficultyGame = new EasyGame()) {  }
 
         public function moveCurrentPlayer(int $nbCase):bool {
             return $this->difficultyGame->moveCurrentPlayer($nbCase);
@@ -37,6 +35,10 @@
 
         public function getCurrentIndex(): int {
             return $this->getGameService()->getCurrentIndex();
+        }
+
+        public function getCurrentScore(): Score {
+            return $this->getGameService()->getCurrentScore();
         }
     }
 ?>

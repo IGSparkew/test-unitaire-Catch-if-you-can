@@ -1,4 +1,4 @@
-<?php 
+<?php    
     interface DifficultyGame {
         public function moveCurrentPlayer(int $nbCase):bool;
         public function pivotCurrentPlayer(string $direction):bool;
@@ -6,7 +6,9 @@
         public function getFirstPlayer(): Player;
         public function getSecondPlayer() : Player;
         public function getCurrentIndex(): int;
+        public function getCurrentScore(): Score;
         public function getGrid(): array;
+        public function getScores(): array;
 
     }
 
@@ -14,14 +16,19 @@
         protected array $playerList;
         protected int $currentPlayerIndex;
         private array $grid;
+        private int $round;
+        private array $scoreList;
 
         public function __construct(array $playerFirstPosition = [0,0], array $playerSecondPosition = [0,0]) { 
             $playerFirst = new Player($playerFirstPosition[0], $playerFirstPosition[1]);
             $playerSecond = new Player($playerSecondPosition[0], $playerSecondPosition[1]);
             $playerFirst->setIsPlayed(true);
             $playerSecond->setIsPlayed(false);
+
             $this->playerList = [$playerFirst, $playerSecond];
             $this->currentPlayerIndex = 0;
+            $this->round = 0;
+            $this->scoreList = [];
 
             $this->grid = [];
             for ($i = 0; $i < 10; $i++) {
@@ -50,6 +57,14 @@
             return $this->grid;
         }
 
+        public function getScores(): array {
+            return $this->scoreList;
+        }
+
+        public function getCurrentScore(): Score {
+            return $this->scoreList[($this->round - 1)];
+        }
+
         protected function changeCurrentPlayer() {
             $currentPlayer = $this->getCurrentPlayer();
 
@@ -57,11 +72,15 @@
                 $this->currentPlayerIndex++;
 
                 if ($this->currentPlayerIndex >= count($this->playerList)) {
+                    $this->round++;
+                    array_push($this->scoreList, new Score($this->round, $this->getFirstPlayer(), $this->getSecondPlayer()));
                     $this->currentPlayerIndex = 0;
                 }
                 $nextCurrentPlayer = $this->playerList[$this->currentPlayerIndex];
                 $nextCurrentPlayer->setIsPlayed(true);
         }
+
+        
 
         
         protected function playerIsOut(int $nbCase): bool {
